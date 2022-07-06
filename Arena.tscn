@@ -1,0 +1,115 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Jogador.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/Arena.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Font.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Scripts/pontos.gd" type="Script" id=4]
+[ext_resource path="res://Scripts/camera.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/record.gd" type="Script" id=6]
+[ext_resource path="res://Inimigo_2.tscn" type="PackedScene" id=7]
+[ext_resource path="res://inimigo_1.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Inimigo.tscn" type="PackedScene" id=9]
+[ext_resource path="res://poder_tempo_recarga.tscn" type="PackedScene" id=10]
+[ext_resource path="res://poder_dano.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Assets/Lives.png" type="Texture" id=12]
+[ext_resource path="res://Scripts/Control.gd" type="Script" id=13]
+[ext_resource path="res://Assets/damage-bg.png" type="Texture" id=14]
+[ext_resource path="res://poder_vida.tscn" type="PackedScene" id=15]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.5
+glow_blend_mode = 0
+glow_bicubic_upscale = true
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 40
+font_data = ExtResource( 3 )
+
+[node name="TheGame" type="Node2D"]
+
+[node name="Arena" type="Node2D" parent="."]
+script = ExtResource( 2 )
+inimigos = [ ExtResource( 8 ), ExtResource( 7 ), ExtResource( 9 ) ]
+poderes = [ ExtResource( 10 ), ExtResource( 11 ), ExtResource( 15 ) ]
+
+[node name="Jogador" parent="Arena" instance=ExtResource( 1 )]
+position = Vector2( 320, 180 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Arena"]
+environment = SubResource( 1 )
+
+[node name="timer_spawn_inimigo" type="Timer" parent="Arena"]
+wait_time = 3.0
+autostart = true
+
+[node name="timer_spawn_poder" type="Timer" parent="Arena"]
+wait_time = 10.0
+autostart = true
+
+[node name="timer_dificuldade" type="Timer" parent="Arena"]
+autostart = true
+
+[node name="UI" type="Node2D" parent="Arena"]
+z_index = 20
+
+[node name="Control" type="Control" parent="Arena/UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 13 )
+
+[node name="pontos" type="Label" parent="Arena/UI/Control"]
+margin_right = 640.0
+margin_bottom = 80.0
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 1
+valign = 1
+script = ExtResource( 4 )
+
+[node name="record" type="Label" parent="Arena/UI/Control"]
+margin_top = 278.0
+margin_right = 640.0
+margin_bottom = 358.0
+custom_fonts/font = SubResource( 3 )
+text = "0"
+align = 1
+valign = 1
+script = ExtResource( 6 )
+
+[node name="vidas" type="TextureRect" parent="Arena/UI/Control"]
+modulate = Color( 0.156863, 0.419608, 0.823529, 1 )
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 12 )
+expand = true
+stretch_mode = 2
+
+[node name="textura_dano" type="TextureRect" parent="Arena/UI/Control"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 14 )
+
+[node name="camera" type="Camera2D" parent="Arena"]
+position = Vector2( 320, 180 )
+current = true
+script = ExtResource( 5 )
+
+[node name="timer_camera" type="Timer" parent="Arena/camera"]
+
+[node name="Enemies" type="Node2D" parent="Arena"]
+
+[connection signal="timeout" from="Arena/timer_spawn_inimigo" to="Arena" method="_on_timer_spawn_inimigo_timeout"]
+[connection signal="timeout" from="Arena/timer_spawn_poder" to="Arena" method="_on_timer_spawn_poder_timeout"]
+[connection signal="timeout" from="Arena/timer_dificuldade" to="Arena" method="_on_timer_dificuldade_timeout"]
+[connection signal="timeout" from="Arena/camera/timer_camera" to="Arena/camera" method="_on_timer_camera_timeout"]

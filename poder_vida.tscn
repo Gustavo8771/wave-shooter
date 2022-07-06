@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://poder_tempo_recarga.tscn" type="PackedScene" id=1]
+
+[node name="poder_vida" instance=ExtResource( 1 )]
+modulate = Color( 1, 0, 0, 1 )
+modificador_variavel_jogador = "vidas"
+valor_variavel_jogador = 3.0
+tempo_recarga_poder = 0.1

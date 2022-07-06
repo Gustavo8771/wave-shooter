@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Inimigo.tscn" type="PackedScene" id=1]
+
+[node name="inimigo_1" instance=ExtResource( 1 )]
+modulate = Color( 0.623529, 0, 1, 1 )
+velocidade = 45
+recuo = 300
+hp = 6
+pontos = 20
